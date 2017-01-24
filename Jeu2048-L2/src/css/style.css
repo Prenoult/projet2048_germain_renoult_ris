@@ -1,0 +1,21 @@
+.pane {
+    -fx-min-width: 131.25;
+    -fx-min-height: 131.25;
+    -fx-background-color: #bbbbbb;
+    -fx-background-radius: 5;
+    -fx-text-alignment: center;
+}
+
+.gridpane {
+     -fx-border-color: black;
+     -fx-grid-lines-visible: true;
+     -fx-halignment: center;
+     -fx-alignment: CENTER;
+}
+
+.tuile {
+    -fx-text-fill: #ffffff;
+    -fx-font: 50px "Tahoma";
+    -fx-font-weight: bold;
+    -fx-padding: 30 50 30 50;
+}
