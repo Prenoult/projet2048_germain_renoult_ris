@@ -5,6 +5,8 @@
  */
 package modele;
 
+import javafx.scene.layout.Pane;
+
 /**
  *
  * @author Sylvain
@@ -13,15 +15,18 @@ public class Case implements Parametres {
 
     private int x, y, valeur;
     private Grille grille;
+    public Tuile t;
 
     public Case(int abs, int ord, int v) {
         this.x = abs;
         this.y = ord;
         this.valeur = v;
+
     }
 
     public void setGrille(Grille g) {
         this.grille = g;
+        this.t= new Tuile(this.x,this.y,this.valeur);
     }
 
     public int getX() {

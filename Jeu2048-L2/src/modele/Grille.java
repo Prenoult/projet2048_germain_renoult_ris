@@ -5,6 +5,8 @@
  */
 package modele;
 
+import javafx.scene.layout.Pane;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -191,6 +193,8 @@ public class Grille implements Parametres {
     }
 
     public boolean nouvelleCase() {
+
+        System.out.print("hh");
         if (this.grille.size() < TAILLE * TAILLE) {
             ArrayList<Case> casesLibres = new ArrayList<>();
             Random ra = new Random();
@@ -198,6 +202,7 @@ public class Grille implements Parametres {
             // on crée toutes les cases encore libres
             for (int x = 0; x < TAILLE; x++) {
                 for (int y = 0; y < TAILLE; y++) {
+                    System.out.println(valeur);
                     Case c = new Case(x, y, valeur);
                     if (!this.grille.contains(c)) { // contains utilise la méthode equals dans Case
                         casesLibres.add(c);
@@ -206,6 +211,7 @@ public class Grille implements Parametres {
             }
             // on en choisit une au hasard et on l'ajoute à la grille
             Case ajout = casesLibres.get(ra.nextInt(casesLibres.size()));
+            System.out.println(ajout);
             ajout.setGrille(this);
             this.grille.add(ajout);
             if ((this.grille.size() == 1) || (this.valeurMax == 2 && ajout.getValeur() == 4)) { // Mise à jour de la valeur maximale présente dans la grille si c'est la première case ajoutée ou si on ajoute un 4 et que l'ancien max était 2

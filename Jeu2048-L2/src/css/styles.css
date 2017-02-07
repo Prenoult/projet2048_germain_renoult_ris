@@ -1,0 +1,31 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 3 mars 2015, 20:28:31
+    Author     : castagno
+*/
+
+.pane {
+    -fx-background-color: #99FF33;
+    -fx-border-color: black;
+}
+
+.gridpane {
+     -fx-border-color: black;
+     -fx-grid-lines-visible: true;
+     /*-fx-border: 2px solid;*/
+     -fx-halignment: center;
+     -fx-alignment: CENTER;  
+}
+
+.tuile {
+    /*-fx-text-alignment: center;
+    -fx-halignment: center; */
+    -fx-text-fill: #6666FF;
+    /*-fx-font: "Cambria";*/
+    -fx-font-size: 32;
+    -fx-padding: 26 40 26 40;
+}
