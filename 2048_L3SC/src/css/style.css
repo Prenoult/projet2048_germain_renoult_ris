@@ -1,0 +1,84 @@
+.pane {
+    -fx-min-width: 131.25;
+    -fx-min-height: 131.25;
+    -fx-max-width: 131.25;
+    -fx-max-height: 131.25;
+    -fx-background-color: #bbbbbb;
+    -fx-background-radius: 5;
+    -fx-text-alignment: center;
+}
+
+.gridpane {
+     -fx-border-color: black;
+     -fx-grid-lines-visible: true;
+     -fx-halignment: center;
+     -fx-alignment: CENTER;
+}
+
+.tuile {
+    -fx-min-width: 131.25;
+    -fx-min-height: 131.25;
+    -fx-max-width: 131.25;
+    -fx-max-height: 131.25;
+    -fx-halignment: center;
+    -fx-alignment: CENTER;
+    -fx-text-fill: #ffffff;
+    /*-fx-text-fill: #776e65;*/
+    -fx-font: 50px "Tahoma";
+    -fx-font-weight: bold;
+    /*-fx-padding: 30 30 30 30;*/
+}
+
+.tuile2 {
+    -fx-text-fill: #776e65;
+    -fx-background-color: #eee4da;
+    -fx-padding: 30 50 30 50;
+}
+
+.tuile4 {
+    -fx-background-color: #ede0c8;
+}
+
+.tuile8 {
+    -fx-background-color: #f2b179;
+}
+
+.tuile16 {
+    -fx-font-size: 45px;
+    -fx-background-color: #f59563;
+}
+
+.tuile32 {
+    -fx-font-size: 45px;
+    -fx-background-color: #f67c5f;
+}
+
+.tuile64 {
+    -fx-font-size: 45px;
+    -fx-background-color: #f65e3b;
+}
+
+.tuile128 {
+    -fx-font-size : 45px;
+    -fx-background-color: #edcf72;
+}
+
+.tuile256 {
+    -fx-font-size : 45px;
+    -fx-background-color: #edcc61;
+}
+
+.tuile512 {
+    -fx-font-size : 45px;
+    -fx-background-color: #edc850;
+}
+
+.tuile1024 {
+    -fx-font-size : 35px;
+    -fx-background-color: #edc53f;
+}
+
+.tuile2048 {
+    -fx-font-size : 30px;
+    -fx-background-color: #b885ac;
+}
