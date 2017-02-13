@@ -58,6 +58,9 @@ public class Controller extends Parent {
 
         @Override
         public void handle(Event event) {
+            if (grille.partieFinie()) // si la partie est finie
+                grille.gameOver(); // game over, on quitte l'application
+
             if(event.getEventType() == KEY_PRESSED) {
                 KeyEvent keyEvent = (KeyEvent)event;
                 switch (keyEvent.getText()) {
@@ -141,14 +144,14 @@ public class Controller extends Parent {
                 }*/
 
                 if (b2) {
-                    grille.nouvelleCase();
+                    boolean b = grille.nouvelleCase();
                     for(Tuile tuile : tuiles) {
                         tuile.setVisible(false);
                     }
                     tuiles.removeAll(tuiles);
                     afficherTuiles();
 
-                    //if (!b) grille.gameOver();
+                    if (!b) grille.gameOver();
                 }
                 System.out.println(grille);
                 if (grille.getValeurMax() >= OBJECTIF) grille.victory();
