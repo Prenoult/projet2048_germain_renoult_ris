@@ -38,6 +38,103 @@ public class Controller extends Parent {
 
         this.addEventHandler(EventType.ROOT, new GenericHandler()); // ajout d'un gestionnaire d'événements
     }
+    public void lancerIA(){
+        Case c1=null ,c2 =null;
+        int i=0;
+        // on récuperre les deux cases
+        for (Case c : cases) {
+            if(i==0){
+                c1=c;
+            }else{
+                c2=c;
+            }
+            i++;
+        }
+
+        // on met la classe avec la plus grande valeur en c1
+        if(c1.getValeur()<c2.getValeur()){
+            Case tmp =c2;
+            c2=c1;
+            c1=tmp;
+        }
+
+        System.out.println(c1);
+        System.out.println(c2);
+
+        System.out.println("    nf  ");
+
+        boolean b1=initIa(0,c1,c2);
+        System.out.println(grille);
+        if (b1) {
+            grille.nouvelleCase();
+            for(Tuile tuile : tuiles) {
+                tuile.setVisible(false);
+            }
+            tuiles.removeAll(tuiles);
+            afficherTuiles();
+
+            //if (!b) grille.gameOver();
+        }
+        System.out.println("     ");
+        System.out.println("     ");
+        boolean b2=initIa(1,c1,c2);
+
+        if (b2) {
+            grille.nouvelleCase();
+            for(Tuile tuile : tuiles) {
+                tuile.setVisible(false);
+            }
+            tuiles.removeAll(tuiles);
+            afficherTuiles();
+
+            //if (!b) grille.gameOver();
+        }
+        System.out.println(grille);
+
+    }
+
+    /**
+     *
+     * @param i permet de savoir si on doit depalcer sur l'axe droite/gauche (i=0) ou l'axe haut/bas (i=1)
+     * @param c1 Case Une, case avec la valeur la plus grande
+     * @param c2 Case Deux, case avec la valeur la plus petite
+     * @return un boolean permettant de savoir si oui ou non il y a eu le deplacement
+     */
+    public boolean initIa(int i, Case c1, Case c2){
+        int direction = 0;
+        if(i==0){
+            if(c1.getX()>c2.getX()){
+                //mouvement à droite
+                direction = DROITE;
+                boolean b2 = grille.lanceurDeplacerCases(direction);
+                return b2;
+                //System.out.println("    droite  "+b2);
+            }else{
+                //mouvement à gauche
+                direction = GAUCHE;
+                boolean b2 = grille.lanceurDeplacerCases(direction);
+                return b2;
+                //System.out.println("    Gauche  "+b2);
+
+            }
+        }else{
+            if(c1.getY()>c2.getY()){
+                //mouvement en Bas
+                direction = BAS;
+                boolean b2 = grille.lanceurDeplacerCases(direction);
+                return b2;
+                //System.out.println("    Bas  "+b2);
+            }else{
+                //mouvement en Haut
+                direction = HAUT;
+                boolean b2 = grille.lanceurDeplacerCases(direction);
+                return b2;
+                //System.out.println("    Haut  "+b2);
+
+            }
+        }
+
+    }
 
     public void afficherTuiles() {
         for (Case c : cases) {
