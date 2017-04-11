@@ -5,11 +5,13 @@
  */
 package modele;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Sylvain
  */
-public class Case implements Parametres {
+public class Case implements Parametres, Serializable {
 
     private int x, y, valeur, id;
     private Grille grille;

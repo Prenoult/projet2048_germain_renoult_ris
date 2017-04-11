@@ -1,3 +1,30 @@
+.logo {
+    -fx-font-size: 80px;
+    -fx-font-weight: bold;
+    -fx-fill: #776e65;
+}
+
+.rules {
+    -fx-font-size: 18px;
+    -fx-fill: #776e65;
+}
+
+.button {
+    -fx-background-color: #8f7a66;
+    -fx-font-size: 18px;
+    -fx-text-fill: #f9f6f2;
+    -fx-padding: 5px 8px;
+    -fx-cursor: hand;
+}
+
+.little_button {
+    -fx-min-width: 68.5px;
+}
+
+.big_button {
+    -fx-min-width: 147px;
+}
+
 .pane {
     -fx-min-width: 131.25;
     -fx-min-height: 131.25;
@@ -13,6 +40,10 @@
      -fx-grid-lines-visible: true;
      -fx-halignment: center;
      -fx-alignment: CENTER;
+}
+
+color_tuile2_4 {
+    -fx-text-fill: #776e65;
 }
 
 .tuile {

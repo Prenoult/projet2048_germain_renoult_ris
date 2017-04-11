@@ -16,4 +16,7 @@ public interface Parametres {
     static final int GAUCHE = -2;
     static final int TAILLE = 4;
     static final int OBJECTIF = 2048;
+
+    static final String HOST = "127.0.0.1";
+    static final int PORT = 2346;
 }

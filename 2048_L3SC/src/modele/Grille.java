@@ -5,6 +5,7 @@
  */
 package modele;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -14,16 +15,18 @@ import java.util.Random;
  *
  * @author Sylvain
  */
-public class Grille implements Parametres {
+public class Grille implements Parametres, Serializable {
 
     private final HashSet<Case> grille;
     private int valeurMax = 0;
     private boolean deplacement;
     private int caseId = 0;
+    private int score = 0;
 
     public Grille() {
         this.grille = new HashSet<>();
     }
+    public Grille(Grille g) { this.grille = g.getGrille(); }
 
     @Override
     public String toString() {
@@ -58,6 +61,8 @@ public class Grille implements Parametres {
     public int getValeurMax() {
         return valeurMax;
     }
+
+    public int getScore() { return  this.score; }
 
     public boolean partieFinie() {
         if (this.grille.size() < TAILLE * TAILLE) {
@@ -100,6 +105,7 @@ public class Grille implements Parametres {
 
     private void fusion(Case c) {
         c.setValeur(c.getValeur() * 2);
+        score += c.getValeur();
         if (this.valeurMax < c.getValeur()) {
             this.valeurMax = c.getValeur();
         }
@@ -187,7 +193,7 @@ public class Grille implements Parametres {
     }
 
     public void gameOver() {
-        System.out.println("La partie est finie. Votre score est " + this.valeurMax);
+        System.out.println("La partie est finie. Votre score est " + this.score);
         System.exit(1);
     }
 

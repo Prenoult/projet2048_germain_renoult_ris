@@ -20,6 +20,10 @@ public class Main extends Application {
 
         root.getChildren().add(controller);
 
+        // Réseaux
+        Serveur serveur = new Serveur();
+        serveur.main(null);
+
         primaryStage.setScene(scene);
         primaryStage.show();
 

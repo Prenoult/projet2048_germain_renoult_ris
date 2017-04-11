@@ -24,6 +24,8 @@ public class Tuile extends Parent {
         p.getStyleClass().add("pane"); // ajout des styles
         p.getStyleClass().add("tuile" + this.valeur);
         c.getStyleClass().add("tuile");
+        if(this.valeur == 2 || this.valeur == 4)
+            c.getStyleClass().add("color_tuile2_4");
         p.getChildren().add(c);
         p.setLayoutX(this.x);
         p.setLayoutY(this.y);

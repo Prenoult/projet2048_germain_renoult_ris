@@ -6,802 +6,66 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.util.converter.IntegerStringConverter;
 import modele.Case;
 import modele.Grille;
+import modele.Parametres;
 
+import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 import static modele.Parametres.*;
 import static modele.Parametres.OBJECTIF;
 
-public class Controller extends Parent {
+public class Controller extends Parent implements Parametres {
 
     private Grille grille = new Grille();
 
     private HashSet<Tuile> tuiles = new HashSet<>();
     private HashSet<Case> cases = grille.getGrille();
-    private Case c1;
+
+    private boolean animationFini = false;
 
     public Controller() {
         Background background = new Background(); // on créé la grille (le background)
         this.getChildren().add(background);
+        background.getButtonNew().setOnAction(actionEvent -> newGame());
+        background.getButtonSave().setOnAction(actionEvent -> save());
+        background.getButtonLoad().setOnAction(actionEvent -> load());
+        background.getButtonIA().setOnAction(actionEvent -> multijoueur());
 
-        boolean b = grille.nouvelleCase();
-        boolean b2 = grille.nouvelleCase();
+        // Si la partie à été sauvegardée on la charge
+        File fichierSauvegarde = new File("grille.ser");
+        /*if(fichierSauvegarde.exists()) { // si le fichier de sauvegarde existe
+            charger(); // on le charge
+            cases = grille.getGrille(); // et on met à jour la liste des cases
+        } else {*/ // sinon on initialise une nouvelle grille avec deux cases aléatoires
+            boolean b = grille.nouvelleCase();
+            boolean b2 = grille.nouvelleCase();
+        /*}*/
+
         System.out.println(this.grille); // affichage de la grille dans la console
-
 
         afficherTuiles();
 
-        lancerIA();
-        //this.addEventHandler(EventType.ROOT, new GenericHandler()); // ajout d'un gestionnaire d'événements
-    }
-
-    public void lancerIA() {
-        this.c1 = null;
-        Case c2 = null;
-        int i = 0;
-        // on récuperre les deux cases
-        for (Case c : cases) {
-            if (i == 0) {
-                c1 = c;
-            } else {
-                c2 = c;
-            }
-            i++;
-        }
-
-        // on met la classe avec la plus grande valeur en c1
-        if (c1.getValeur() < c2.getValeur()) {
-            Case tmp = c2;
-            c2 = c1;
-            c1 = tmp;
-        }
-
-        boolean b1 = initIa(0, c1, c2);
-        System.out.println(grille);
-        if (b1) {
-            grille.nouvelleCase();
-            for (Tuile tuile : tuiles) {
-                tuile.setVisible(false);
-            }
-            tuiles.removeAll(tuiles);
-            afficherTuiles();
-
-            if (!b1) grille.gameOver();
-            if (grille.getValeurMax() >= OBJECTIF) grille.victory();
-            // try{
-            //   Thread.sleep(5000);
-            //}catch(InterruptedException e){}
-        }
-        System.out.println("     ");
-        System.out.println("     ");
-        System.out.println(grille);
-        boolean b2 = initIa(1, c1, c2);
-
-
-        if (b2) {
-            grille.nouvelleCase();
-            for (Tuile tuile : tuiles) {
-                tuile.setVisible(false);
-            }
-            tuiles.removeAll(tuiles);
-            afficherTuiles();
-
-            if (b2 == false) grille.gameOver();
-        }
-        System.out.println("     ");
-        System.out.println("     ");
-        System.out.println(grille);
-        if (grille.getValeurMax() >= OBJECTIF) grille.victory();
-        boolean loop = true;
-        for (Case c : cases) {
-            if (c != c1 && c.getValeur() > c1.getValeur()) {
-                if ((c.getY() == 0 && c.getX() == 0)|| (c.getY() == 0 && c.getX() == 3) || (c.getY() == 3 && c.getX() == 0) || (c.getY() == 3 && c.getX() == 3) ) {
-                    c1 = c;
-                }
-
-                if(c.getX()==0){
-                    if (c1.getVoisinDirect(HAUT) == null) {
-                        boolean b = grille.lanceurDeplacerCases(HAUT);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            afficherTuiles();
-                        }
-                    }
-                    if (c1.getVoisinDirect(BAS) == null) {
-                        boolean b = grille.lanceurDeplacerCases(BAS);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            afficherTuiles();
-                        }
-                    }
-                }
-
-                if(c.getX()==3){
-                    if (c1.getVoisinDirect(HAUT) == null) {
-                        boolean b = grille.lanceurDeplacerCases(HAUT);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            afficherTuiles();
-                        }
-                    }
-                    if (c1.getVoisinDirect(BAS) == null) {
-                        boolean b = grille.lanceurDeplacerCases(BAS);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            afficherTuiles();
-                        }
-                    }
-                }
-
-                if(c.getY()==0){
-                    if (c1.getVoisinDirect(DROITE) == null) {
-                        boolean b = grille.lanceurDeplacerCases(DROITE);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            afficherTuiles();
-                        }
-                    }
-                    if (c1.getVoisinDirect(GAUCHE) == null) {
-                        boolean b = grille.lanceurDeplacerCases(GAUCHE);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            afficherTuiles();
-                        }
-                    }
-                }
-
-                if(c.getY()==3){
-                    if (c1.getVoisinDirect(DROITE) == null) {
-                        boolean b = grille.lanceurDeplacerCases(DROITE);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            afficherTuiles();
-                        }
-                    }
-                    if (c1.getVoisinDirect(GAUCHE) == null) {
-                        boolean b = grille.lanceurDeplacerCases(GAUCHE);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            afficherTuiles();
-                        }
-                    }
-                }
-                //
-            }
-        }
-        while (!grille.partieFinie() && loop) {
-            loop = deplacerIa(c1);
-            if (loop) {
-                grille.nouvelleCase();
-                for (Tuile tuile : tuiles) {
-                    tuile.setVisible(false);
-                }
-                tuiles.removeAll(tuiles);
-                afficherTuiles();
-
-                if (!loop) grille.gameOver();
-            }
-            System.out.println("     ");
-            System.out.println(grille);
-            System.out.println(" ");
-            if (grille.getValeurMax() >= OBJECTIF) grille.victory();
-        }
-        //System.out.println("       " + c1 + loop);
-
-    }
-
-    private Boolean deplacerIa(Case c1) {
-        //System.out.println(c1);
-        Case tmp;
-        int direction = 0;
-        //identifier le coin de c1
-        //coin 0 : haut gauche; coin 1 : haut droite; coin 2 : bas gauche coin 3 : bas droite
-        int coin = -1;
-        if (c1.getX() == 0 && c1.getY() == 0) {
-            coin = 0;
-        }
-        if (c1.getX() == 3 && c1.getY() == 0) {
-            coin = 1;
-        }
-        if (c1.getX() == 0 && c1.getY() == 3) {
-            coin = 2;
-        }
-        if (c1.getX() == 3 && c1.getY() == 3) {
-            coin = 3;
-        }
-
-
-        if (coin != -1) {
-            //Si la case est dans un coin
-
-            //Voir si on peut fusionner c1
-            if (coin == 0) {
-                tmp = c1.getVoisinDirect(DROITE);
-                if (c1.valeurEgale(tmp)) {
-                    direction = GAUCHE;
-                } else {
-                    tmp = c1.getVoisinDirect(BAS);
-                    if (c1.valeurEgale(tmp)) {
-                        direction = HAUT;
-                    }
-                }
-            }
-
-            if (coin == 1) {
-                tmp = c1.getVoisinDirect(GAUCHE);
-                if (c1.valeurEgale(tmp)) {
-                    direction = DROITE;
-                } else {
-                    tmp = c1.getVoisinDirect(BAS);
-                    if (c1.valeurEgale(tmp)) {
-                        direction = HAUT;
-                    }
-                }
-            }
-
-            if (coin == 2) {
-                tmp = c1.getVoisinDirect(DROITE);
-                if (c1.valeurEgale(tmp)) {
-                    direction = GAUCHE;
-                } else {
-                    tmp = c1.getVoisinDirect(HAUT);
-                    if (c1.valeurEgale(tmp)) {
-                        direction = BAS;
-                    }
-                }
-            }
-
-            if (coin == 3) {
-                tmp = c1.getVoisinDirect(GAUCHE);
-                if (c1.valeurEgale(tmp)) {
-                    direction = DROITE;
-                } else {
-                    tmp = c1.getVoisinDirect(HAUT);
-                    if (c1.valeurEgale(tmp)) {
-                        direction = BAS;
-                    }
-                }
-            }
-
-            if (direction != 0) {
-                boolean b = grille.lanceurDeplacerCases(direction);
-                //SORT DE LA FONCTION
-                System.out.println("sort");
-                return b;
-            } else {
-                //Voir si on fusionner des cases de la ligne de c1
-                for (Case c : cases) {
-                    if (c.getX() != c1.getX() && c.getY() == c1.getY()) {
-                        if (c1.getY() == 0) {
-                            tmp = c.getVoisinDirect(BAS);
-                            if (c.valeurEgale(tmp)) {
-                                direction = HAUT;
-                            } else {
-                                if (c1.getX() == 0) {
-                                    tmp = c.getVoisinDirect(GAUCHE);
-                                    if (c.valeurEgale(tmp)) {
-                                        direction = GAUCHE;
-                                        boolean b = grille.lanceurDeplacerCases(direction);
-                                        //SORT DE LA FONCTION
-                                        return b;
-                                    } else {
-                                        tmp = c.getVoisinDirect(DROITE);
-                                        if (c.valeurEgale(tmp)) {
-                                            direction = GAUCHE;
-                                            boolean b = grille.lanceurDeplacerCases(direction);
-                                            //SORT DE LA FONCTION
-                                            return b;
-                                        }
-                                    }
-                                } else {
-                                    tmp = c.getVoisinDirect(GAUCHE);
-                                    if (c.valeurEgale(tmp)) {
-                                        direction = DROITE;
-                                        boolean b;
-                                        b = grille.lanceurDeplacerCases(direction);
-                                        //SORT DE LA FONCTION
-                                        return b;
-                                    } else {
-                                        tmp = c.getVoisinDirect(DROITE);
-                                        if (c.valeurEgale(tmp)) {
-                                            direction = 0;
-                                            direction = DROITE;
-                                            boolean b = grille.lanceurDeplacerCases(direction);
-                                            //SORT DE LA FONCTION
-                                            return b;
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            tmp = c.getVoisinDirect(HAUT);
-                            if (c.valeurEgale(tmp)) {
-                                direction = BAS;
-                            } else {
-                                if (c1.getX() == 0) {
-                                    tmp = c.getVoisinDirect(GAUCHE);
-                                    if (c.valeurEgale(tmp)) {
-                                        direction = 0;
-                                        direction = GAUCHE;
-                                        boolean b = grille.lanceurDeplacerCases(direction);
-                                        //SORT DE LA FONCTION
-                                        return b;
-                                    } else {
-                                        tmp = c.getVoisinDirect(DROITE);
-                                        if (c.valeurEgale(tmp)) {
-                                            direction = GAUCHE;
-                                            boolean b = grille.lanceurDeplacerCases(direction);
-                                            //SORT DE LA FONCTION
-                                            return b;
-                                        }
-                                    }
-                                } else {
-                                    tmp = c.getVoisinDirect(GAUCHE);
-                                    if (c.valeurEgale(tmp)) {
-                                        direction = DROITE;
-                                        boolean b = grille.lanceurDeplacerCases(direction);
-                                        //SORT DE LA FONCTION
-                                        return b;
-                                    } else {
-                                        tmp = c.getVoisinDirect(DROITE);
-                                        if (c.valeurEgale(tmp)) {
-                                            direction = 0;
-                                            direction = DROITE;
-                                            boolean b = grille.lanceurDeplacerCases(direction);
-                                            //SORT DE LA FONCTION
-                                            return b;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                //Voir si on fusionner des cases de la colonne de c1
-                for (Case c : cases) {
-                    if (c.getX() == c1.getX() && c.getY() != c1.getY()) {
-                        if (c1.getX() == 0) {
-                            //gauche
-                            tmp = c.getVoisinDirect(DROITE);
-                            if (c.valeurEgale(tmp)) {
-                                direction = GAUCHE;
-                                boolean b = grille.lanceurDeplacerCases(direction);
-                                //SORT DE LA FONCTION
-                                return b;
-                            } else {
-                                //SUITE
-                                if (c1.getY() == 0) {
-                                    tmp = c.getVoisinDirect(HAUT);
-                                    if (c.valeurEgale(tmp)) {
-                                        direction = HAUT;
-                                        boolean b = grille.lanceurDeplacerCases(direction);
-                                        //SORT DE LA FONCTION
-                                        return b;
-                                    } else {
-                                        tmp = c.getVoisinDirect(BAS);
-                                        if (c.valeurEgale(tmp)) {
-                                            direction = HAUT;
-                                            return grille.lanceurDeplacerCases(direction);
-                                        }
-                                    }
-                                } else {
-                                    tmp = c.getVoisinDirect(HAUT);
-                                    if (c.valeurEgale(tmp)) {
-                                        direction = BAS;
-                                        boolean b;
-                                        b = grille.lanceurDeplacerCases(direction);
-                                        //SORT DE LA FONCTION
-                                        return b;
-                                    } else {
-                                        tmp = c.getVoisinDirect(BAS);
-                                        if (c.valeurEgale(tmp)) {
-                                            direction = BAS;
-                                            return grille.lanceurDeplacerCases(direction);
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            //droite
-                            tmp = c.getVoisinDirect(GAUCHE);
-                            if (c.valeurEgale(tmp)) {
-                                direction = DROITE;
-                                boolean b = grille.lanceurDeplacerCases(direction);
-                                //SORT DE LA FONCTION
-                                return b;
-                            } else {
-                                //SUITE
-                                if (c1.getY() == 0) {
-                                    tmp = c.getVoisinDirect(HAUT);
-                                    if (c.valeurEgale(tmp)) {
-                                        direction = HAUT;
-                                        boolean b;
-                                        b = grille.lanceurDeplacerCases(direction);
-                                        //SORT DE LA FONCTION
-                                        return b;
-                                    } else {
-                                        tmp = c.getVoisinDirect(BAS);
-                                        if (c.valeurEgale(tmp)) {
-                                            direction = HAUT;
-                                            boolean b = grille.lanceurDeplacerCases(direction);
-                                            return b;
-                                        }
-                                    }
-                                } else {
-                                    tmp = c.getVoisinDirect(HAUT);
-                                    if (c.valeurEgale(tmp)) {
-                                        direction = BAS;
-                                        boolean b;
-                                        return grille.lanceurDeplacerCases(direction);
-                                        //SORT DE LA FONCTION
-
-                                    } else {
-                                        tmp = c.getVoisinDirect(BAS);
-                                        if (c.valeurEgale(tmp)) {
-                                            direction = BAS;
-                                            return grille.lanceurDeplacerCases(direction);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                }
-
-            }
-            //Voir si on peut se deplacer sans bouger c1
-            //CAS 0
-            if (coin == 0) {
-                boolean b = grille.lanceurDeplacerCases(GAUCHE);
-                if (b) {
-                    return b;
-                } else {
-                    b = grille.lanceurDeplacerCases(HAUT);
-                    if (b) return b;
-                }
-            }
-            //CAS 1
-            if (coin == 1) {
-                boolean b = grille.lanceurDeplacerCases(DROITE);
-                if (b) {
-                    return b;
-                } else {
-                    b = false;
-                    b = grille.lanceurDeplacerCases(HAUT);
-                    if (b) return b;
-                }
-            }
-
-            //CAS 2
-            if (coin == 2) {
-                boolean b;
-                b = grille.lanceurDeplacerCases(GAUCHE);
-                if (b) {
-                    return b;
-                } else {
-                    b = grille.lanceurDeplacerCases(BAS);
-                    if (b) return b;
-                }
-            }
-
-            //CAS 3
-            if (coin == 3) {
-                boolean b = grille.lanceurDeplacerCases(DROITE);
-                if (b) {
-                    return b;
-                } else {
-                    b = grille.lanceurDeplacerCases(BAS);
-                    if (b) return b;
-                }
-            }
-
-            //Obligation de deplacer c1
-            if (coin == 0) {
-                int j = 0;
-                for (Case c : cases) {
-                    if (c.getX() != c1.getX() && c.getY() == c1.getY()) {
-                        j++;
-                    }
-                    if (j == 4) {
-                        boolean b = grille.lanceurDeplacerCases(DROITE);
-                        if (b) return b;
-                    } else {
-                        boolean b = grille.lanceurDeplacerCases(BAS);
-                        if (b) return b;
-                    }
-                }
-            }
-            //CAS 1
-            if (coin == 1) {
-                int j = 0;
-                for (Case c : cases) {
-                    if (c.getX() != c1.getX() && c.getY() == c1.getY()) {
-                        j++;
-                    }
-                    if (j == 4) {
-                        boolean b;
-                        b = grille.lanceurDeplacerCases(GAUCHE);
-                        if (b) return b;
-                    } else {
-                        boolean b = grille.lanceurDeplacerCases(BAS);
-                        if (b) return b;
-                    }
-                }
-            }
-
-            //CAS 2
-            if (coin == 2) {
-                int j = 0;
-                for (Case c : cases) {
-                    if (c.getX() != c1.getX() && c.getY() == c1.getY()) {
-                        j++;
-                    }
-                    if (j == 4) {
-                        boolean b = grille.lanceurDeplacerCases(DROITE);
-                        if (b) return b;
-                    } else {
-                        boolean b;
-                        b = grille.lanceurDeplacerCases(HAUT);
-                        if (b) return b;
-                    }
-                }
-            }
-
-            //CAS 3
-            if (coin == 3) {
-                int j = 0;
-                for (Case c : cases) {
-                    if (c.getX() != c1.getX() && c.getY() == c1.getY()) {
-                        j++;
-                    }
-                    if (j == 4) {
-                        boolean b;
-                        b = grille.lanceurDeplacerCases(GAUCHE);
-                        if (b) return b;
-                    } else {
-                        boolean b;
-                        b = grille.lanceurDeplacerCases(HAUT);
-                        if (b) return b;
-                    }
-                }
-            }
-
-
-        } else {
-
-            // Dans le cas ou la case n'est pas dans un coin
-
-
-            //Cas ou la case principale est sur une arrete
-            if (c1.getX() == 0) {
-                if (c1.getVoisinDirect(HAUT) == null) {
-                    boolean b = grille.lanceurDeplacerCases(HAUT);
-                    if (b) return b;
-                }
-                if (c1.getVoisinDirect(BAS) == null) {
-                    boolean b = grille.lanceurDeplacerCases(BAS);
-                    if (b) return b;
-                }
-                //
-
-                boolean b = grille.lanceurDeplacerCases(GAUCHE);
-                if (b) {
-                    return b;
-                }
-
-                if (c1.getY() < 2) {
-                    b = grille.lanceurDeplacerCases(HAUT);
-                    if (b) return b;
-                } else {
-                    b = grille.lanceurDeplacerCases(BAS);
-                    if (b) return b;
-                }
-
-            }
-
-            if (c1.getX() == 3) {
-                if (c1.getVoisinDirect(HAUT) == null) {
-                    boolean b = grille.lanceurDeplacerCases(HAUT);
-                    if (b) return b;
-                }
-                if (c1.getVoisinDirect(BAS) == null) {
-                    boolean b = grille.lanceurDeplacerCases(BAS);
-                    if (b) return b;
-                }
-                //
-                boolean b;
-                b = grille.lanceurDeplacerCases(DROITE);
-                if (b) {
-                    return b;
-                }
-
-                if (c1.getY() < 2) {
-                    b = grille.lanceurDeplacerCases(HAUT);
-                    if (b) return b;
-                } else {
-                    b = grille.lanceurDeplacerCases(BAS);
-                    if (b) return b;
-                }
-
-            }
-
-            if (c1.getY() == 0) {
-                if (c1.getVoisinDirect(DROITE) == null) {
-                    boolean b = grille.lanceurDeplacerCases(DROITE);
-                    if (b) return b;
-                }
-                if (c1.getVoisinDirect(GAUCHE) == null) {
-                    boolean b = grille.lanceurDeplacerCases(GAUCHE);
-                    if (b) return b;
-                }
-                //
-                boolean b = grille.lanceurDeplacerCases(HAUT);
-                if (b) {
-                    return b;
-                }
-
-                if (c1.getX() < 2) {
-                    b = grille.lanceurDeplacerCases(GAUCHE);
-                    if (b) return b;
-                } else {
-                    b = grille.lanceurDeplacerCases(DROITE);
-                    if (b) return b;
-                }
-
-            }
-
-            if (c1.getY() == 3) {
-                if (c1.getVoisinDirect(DROITE) == null) {
-                    boolean b = grille.lanceurDeplacerCases(DROITE);
-                    if (b) return b;
-                }
-                if (c1.getVoisinDirect(GAUCHE) == null) {
-                    boolean b = grille.lanceurDeplacerCases(GAUCHE);
-                    if (b) return b;
-                }
-                boolean b;
-                b = grille.lanceurDeplacerCases(BAS);
-                if (b) {
-                    return b;
-                }
-
-                if (c1.getX() < 2) {
-                    b = grille.lanceurDeplacerCases(GAUCHE);
-                    if (b) return b;
-                } else {
-                    b = grille.lanceurDeplacerCases(DROITE);
-                    if (b) return b;
-                }
-
-                //
-
-            }
-
-            //fusionne la meilleure case possible
-            int d=0;
-            Case cmax = new Case(-1,-1,-1,-1);
-            for (Case c : cases){
-                if(c.getValeur()>cmax.getValeur()){
-                    if (c.getVoisinDirect(DROITE).valeurEgale(c)){
-                        d=DROITE;
-                        cmax=c;
-                    }
-                    if (c.getVoisinDirect(GAUCHE).valeurEgale(c)){
-                        d=GAUCHE;
-                        cmax=c;
-                    }
-                    if (c.getVoisinDirect(HAUT).valeurEgale(c)){
-                        d=HAUT;
-                        cmax=c;
-                    }
-                    if (c.getVoisinDirect(BAS).valeurEgale(c)){
-                        d=BAS;
-                        cmax=c;
-                    }
-                }
-            }
-            if(d!=0){
-                boolean b = grille.lanceurDeplacerCases(d);
-                return b;
-            }
-
-
-        }
-
-        return false;
-    }
-
-    /**
-     * @param i  permet de savoir si on doit depalcer sur l'axe droite/gauche (i=0) ou l'axe haut/bas (i=1)
-     * @param c1 Case Une, case avec la valeur la plus grande
-     * @param c2 Case Deux, case avec la valeur la plus petite
-     * @return un boolean permettant de savoir si oui ou non il y a eu le deplacement
-     */
-    public boolean initIa(int i, Case c1, Case c2) {
-        int direction = 1;
-        if (i == 0) {
-            if (c1.getX() > c2.getX()) {
-                //mouvement à droite
-                direction = DROITE;
-                boolean b2 = grille.lanceurDeplacerCases(direction);
-                return b2;
-                //System.out.println("    droite  "+b2);
-            } else {
-                //mouvement à gauche
-                direction = GAUCHE;
-                boolean b2 = grille.lanceurDeplacerCases(direction);
-                return b2;
-                //System.out.println("    Gauche  "+b2);
-
-            }
-        } else {
-            if (c1.getY() > c2.getY()) {
-                //mouvement en Bas
-                direction = BAS;
-                boolean b2 = grille.lanceurDeplacerCases(direction);
-                return b2;
-                //System.out.println("    Bas  "+b2);
-            } else {
-                //mouvement en Haut
-                direction = HAUT;
-                boolean b2 = grille.lanceurDeplacerCases(direction);
-                return b2;
-                //System.out.println("    Haut  "+b2);
-
-            }
-        }
-
+        this.addEventHandler(EventType.ROOT, new GenericHandler()); // ajout d'un gestionnaire d'événements
+        //IA();
     }
 
     public void afficherTuiles() {
         for (Case c : cases) {
-            //System.out.println(c);
+            System.out.println(c);
+            System.out.println(c.getID());
             Tuile tuile = new Tuile(c.getValeur(), c.getID());
             tuile.convertirPositionCase(c);
             tuile.location(tuile.getx(), tuile.gety());
@@ -809,6 +73,149 @@ public class Controller extends Parent {
             tuiles.add(tuile);
             this.getChildren().add(tuile);
         }
+    }
+
+    public void afficherTuile(Case c) {
+        Tuile tuile = new Tuile(c.getValeur(), c.getID());
+        tuile.convertirPositionCase(c);
+        tuile.location(tuile.getx(), tuile.gety());
+        tuile.setVisible(true);
+        tuiles.add(tuile);
+        this.getChildren().add(tuile);
+    }
+
+    public void newGame() {
+        grille = new Grille();
+        cases = grille.getGrille();
+        boolean b = grille.nouvelleCase();
+        boolean b2 = grille.nouvelleCase();
+        for(Tuile tuile : tuiles) {
+            tuile.setVisible(false);
+        }
+        tuiles.removeAll(tuiles);
+        afficherTuiles();
+    }
+
+    public void save() {
+        // try-with-resources ferme automatiquement les ressources -> pas besoin de .close()
+        try  (FileOutputStream fichier = new FileOutputStream("grille.ser");
+              ObjectOutputStream oos = new ObjectOutputStream(fichier)) {
+            oos.writeObject(grille);
+            oos.flush();
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void load() {
+        try (FileInputStream fichierIn = new FileInputStream("grille.ser");
+             ObjectInputStream ois = new ObjectInputStream(fichierIn)) {
+            grille = (Grille) ois.readObject();
+        } catch(IOException e) {
+            e.printStackTrace();
+        } catch(ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        // On supprime toutes les cases qui apparaissent actuellement à l'écran
+        for(Tuile tuile : tuiles) {
+            tuile.setVisible(false);
+        }
+        tuiles.removeAll(tuiles);
+        // On met à jour la grille et on l'affiche
+        cases = grille.getGrille();
+        afficherTuiles();
+    }
+
+
+    public void multijoueur() {
+        int score = grille.getScore();
+        System.out.println("step 1 : on se connecte au serveur");
+        try(Socket socket = new Socket(HOST, PORT))  {
+            System.out.println("step 2 : on configure les entrées");
+            InputStreamReader reader = new InputStreamReader(socket.getInputStream());
+            BufferedReader in = new BufferedReader(reader);
+            System.out.println("step 3 : on lit ce que le serveur répond");
+            //String line = in.readLine();
+
+            PrintWriter out = new PrintWriter(socket.getOutputStream());
+            //out.write(Integer.toString(score)/*line*/);
+            //out.flush();
+            System.out.println("step 4");
+
+            // Création d'une seconde fenêtre
+            Stage stage = new Stage();
+            stage.setTitle("2048"); // titre de la fenêtre
+            Group root = new Group(); // création d'un groupe
+            Scene scene = new Scene(root, 900, 900, Color.WHITE); // initialisation de la fenêtre (blanche 900*900)
+            boolean add = scene.getStylesheets().add("css/style.css"); // ajout du fichier css
+
+            root.getChildren().add(new Controller());
+
+            stage.setScene(scene);
+            stage.show();
+
+            if(!grille.partieFinie()) {
+                out.write(Integer.toString(score)/*line*/);
+                out.flush();
+            }
+
+        } catch(UnknownHostException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void IA() {
+        while(!grille.partieFinie()) {
+            int direction = HAUT;
+            if(!grille.lanceurDeplacerCases(direction)) {
+                Grille gr1 = new Grille(grille);
+                Grille gr2 = new Grille(grille);
+                if(gr1.lanceurDeplacerCases(DROITE) && gr2.lanceurDeplacerCases(GAUCHE)) {
+                    //Grille g1 = new Grille(grille);
+                    //g1.lanceurDeplacerCases(GAUCHE);
+                    int nbCasesVides1 = 16 - gr1.getGrille().size();
+
+                    //Grille g2 = new Grille(grille);
+                    //g2.lanceurDeplacerCases(DROITE);
+                    int nbCasesVides2 = 16 - gr2.getGrille().size();
+
+                    if(nbCasesVides1 >= nbCasesVides2) {
+                        direction = GAUCHE;
+                    } else {
+                        direction = DROITE;
+                    }
+                    gr1 = new Grille(grille);
+                } else if(gr1.lanceurDeplacerCases(GAUCHE)) {
+                    direction = GAUCHE;
+                    gr1 = new Grille(grille);
+                } else if(gr1.lanceurDeplacerCases(DROITE)) {
+                    direction = DROITE;
+                    gr1 = new Grille(grille);
+                } else {
+                    direction = BAS;
+                }
+            }
+            boolean b2 = grille.lanceurDeplacerCases(direction);
+            if (b2) {
+                boolean b = grille.nouvelleCase();
+                for(Tuile tuile : tuiles) {
+                    tuile.setVisible(false);
+                }
+                tuiles.removeAll(tuiles);
+                afficherTuiles();
+
+                if (!b) grille.gameOver();
+            }
+            System.out.println(grille);
+            if (grille.getValeurMax() >= OBJECTIF) grille.victory();
+            direction = 0;
+        }
+        grille.gameOver();
     }
 
 
@@ -821,8 +228,8 @@ public class Controller extends Parent {
             if (grille.partieFinie()) // si la partie est finie
                 grille.gameOver(); // game over, on quitte l'application
 
-            if (event.getEventType() == KEY_PRESSED) {
-                KeyEvent keyEvent = (KeyEvent) event;
+            if(event.getEventType() == KEY_PRESSED) {
+                KeyEvent keyEvent = (KeyEvent)event;
                 switch (keyEvent.getText()) {
                     case "z":
                         direction = HAUT;
@@ -840,16 +247,67 @@ public class Controller extends Parent {
 
                 boolean b2 = grille.lanceurDeplacerCases(direction);
 
-                /*for(Case ca : cases) {
+                /* Test de déplacement fluide */
+
+
+                //for(Case ca : cases) {
+               /* ArrayList id = new ArrayList();
                     for(Tuile tuile : tuiles) {
-                        //tuile.modifierObjectif(ca);
-                        //if(tuile.getID() == ca.getID()) {
+                        for(Case ca :cases) {
+                            //tuile.modifierObjectif(ca);
+                            if (tuile.getID() == ca.getID()) {
+                                System.out.println("ID = " + ca.getID() + ". Le x de tuile est : " + tuile.getx() + "et celui de la case est : " + ca.getX());
+                                id.add(ca.getID());
+                                switch(ca.getX()) {
+                                    case 0:
+                                        tuile.setObjectifx(165);
+                                        break;
+                                    case 1:
+                                        tuile.setObjectifx(312);
+                                        break;
+                                    case 2:
+                                        tuile.setObjectifx(459);
+                                        break;
+                                    case 3:
+                                        tuile.setObjectifx(606);
+                                        break;
+                                }
+                                switch(ca.getY()) {
+                                    case 0:
+                                        tuile.setObjectify(215);
+                                        break;
+                                    case 1:
+                                        tuile.setObjectify(362);
+                                        break;
+                                    case 2:
+                                        tuile.setObjectify(509);
+                                        break;
+                                    case 3:
+                                        tuile.setObjectify(656);
+                                        break;
+                                }
+                            } else {
+                                switch (direction) {
+                                    case HAUT:
+                                        tuile.setObjectify(215);
+                                        break;
+                                    case BAS:
+                                        tuile.setObjectify(656);
+                                        break;
+                                    case GAUCHE:
+                                        tuile.setObjectifx(165);
+                                        break;
+                                    case DROITE:
+                                        tuile.setObjectifx(606);
+                                        break;
+                                }
+                                //tuile.setObjectifx();
+                            }
 
-
-                        /*switch (keyEvent.getText()) {
+                        switch (keyEvent.getText()) {
                             case "z":
                                 if (tuile.getObjectify() > 215) { // possible uniquement si on est pas sur la ligne la plus en haut
-                                    boolean autorise = true;
+                                    /*boolean autorise = true;
                                     for(application.Case t : tuiles) {
                                         if(tuile.getx() == t.getx() && t.gety() == tuile.gety() - 147) {
                                             System.out.println("OIHJOIDHNUIJGDSHJNSUIHSIH");
@@ -858,11 +316,11 @@ public class Controller extends Parent {
                                         }
                                     }
                                     if(autorise) {
-                                        //objectify = c.getObjectify();
-                                        tuile.setObjectify(tuile.getObjectify() - 147); // on définit la position que devra atteindre la tuile en ordonné (modèle). Le thread se chargera de mettre la vue à jour
+                                        //objectify = c.getObjectify();*/
+                                        //tuile.setObjectify(tuile.getObjectify() - 147); // on définit la position que devra atteindre la tuile en ordonné (modèle). Le thread se chargera de mettre la vue à jour
                                         //c.setObjectify(objectify);
-                                        direction = HAUT;
-                                    }
+                                        /*direction = HAUT;
+                                    //}
                                 }
                                 break;
                             case "s":
@@ -875,7 +333,7 @@ public class Controller extends Parent {
                                     //}
                                     //if(autorise) {
                                         //objectify = c.getObjectify();
-                                        tuile.setObjectify(tuile.getObjectify() + 147); // on définit la position que devra atteindre la tuile en ordonné (modèle). Le thread se chargera de mettre la vue à jour
+                                        //tuile.setObjectify(tuile.getObjectify() + 147); // on définit la position que devra atteindre la tuile en ordonné (modèle). Le thread se chargera de mettre la vue à jour
                                         //c.setObjectify(objectify);
                                         direction = BAS;
                                     //}
@@ -884,7 +342,7 @@ public class Controller extends Parent {
                             case "q":
                                 if (tuile.getObjectifx() > 165) { // possible uniquement si on est pas dans la colonne la plus à droite
                                     //objectifx = c.getObjectifx();
-                                    tuile.setObjectifx(tuile.getObjectifx() - 147); // on définit la position que devra atteindre la tuile en abscisse (modèle). Le thread se chargera de mettre la vue à jour
+                                    //tuile.setObjectifx(tuile.getObjectifx() - 147); // on définit la position que devra atteindre la tuile en abscisse (modèle). Le thread se chargera de mettre la vue à jour
                                     //c.setObjectifx(objectifx);
                                     direction = GAUCHE;
                                 }
@@ -892,23 +350,36 @@ public class Controller extends Parent {
                             case "d":
                                 if (tuile.getObjectifx() < 606) { // possible uniquement si on est pas dans la colonne la plus à gauche
                                     //objectifx = c.getObjectifx();
-                                    tuile.setObjectifx(tuile.getObjectifx() + 147); // on définit la position que devra atteindre la tuile en abscisse (modèle). Le thread se chargera de mettre la vue à jour
+                                    //tuile.setObjectifx(tuile.getObjectifx() + 147); // on définit la position que devra atteindre la tuile en abscisse (modèle). Le thread se chargera de mettre la vue à jour
                                     //c.setObjectifx(objectifx);
                                     direction = DROITE;
-                                }
+                                }*/
                                 /* 165 - 312 - 459 - 606 */
-                                /*break;
-                        }
+                               /* break;
                         }
                     }
+                   // }
                 }*/
 
                 if (b2) {
                     boolean b = grille.nouvelleCase();
-                    for (Tuile tuile : tuiles) {
+                    for(Tuile tuile : tuiles) {
                         tuile.setVisible(false);
                     }
                     tuiles.removeAll(tuiles);
+
+                    /*for(Case ca : cases) {
+                        if(!id.contains(ca.getID())) {
+                            if(animationFini) {
+                                afficherTuile(ca);
+                                animationFini = false;
+                            }
+                        }
+                    }
+                    for(Tuile tuile : tuiles) {
+                        if(!id.contains(tuile.getID()))
+                            tuile.setVisible(false);
+                    }*/
                     afficherTuiles();
 
                     if (!b) grille.gameOver();
@@ -918,7 +389,7 @@ public class Controller extends Parent {
                 direction = 0;
             }
             /* Verifier que la grille n'est pas pleine. Si c'est le cas -> game over */
-            for (Tuile tuile : tuiles) {
+            for(Tuile tuile : tuiles) {
                 Task task = new Task<Void>() { // on définit une tâche parallèle pour mettre à jour la vue
                     @Override
                     public Void call() throws Exception { // implémentation de la méthode protected abstract V call() dans la classe Task
@@ -968,6 +439,7 @@ public class Controller extends Parent {
                 th.setDaemon(true); // le Thread s'exécutera en arrière-plan (démon informatique)
                 th.start(); // et on exécute le Thread pour mettre à jour la vue (déplacement continu de la tuile horizontalement)
             }
+            animationFini = true;
 
         }
 
