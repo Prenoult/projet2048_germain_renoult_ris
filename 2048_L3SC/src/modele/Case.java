@@ -16,6 +16,13 @@ public class Case implements Parametres, Serializable {
     private int x, y, valeur, id;
     private Grille grille;
 
+    /**
+     * Constructeur d'une Case
+     * @param abs correspond à la coordonnée en abscisse de la case
+     * @param ord correspond à la coordonnée en ordonnée de la case
+     * @param v correspond à la valeur de la case
+     * @param id correspond à l'idée de la case
+     */
     public Case(int abs, int ord, int v, int id) {
         this.x = abs;
         this.y = ord;
@@ -57,6 +64,9 @@ public class Case implements Parametres, Serializable {
     public int getID() { return this.id; }
 
     @Override
+    /**
+     * Fonction permettant de savoir si deux cases sont identiques
+     */
     public boolean equals(Object obj) { // la méthode equals est utilisée lors de l'ajout d'une case à un ensemble pour vérifier qu'il n'y a pas de doublons (teste parmi tous les candidats qui ont le même hashcode)
         if (obj instanceof Case) {
             Case c = (Case) obj;
@@ -71,6 +81,11 @@ public class Case implements Parametres, Serializable {
         return this.x * 7 + this.y * 13;
     }
 
+    /**
+     * Fonction permettant de savoir si deux cases ont la même valeur
+     * @param c case à comparer
+     * @return true si les cases ont la même valeur et false dans le cas contraire
+     */
     public boolean valeurEgale(Case c) {
         if (c != null) {
             return this.valeur == c.valeur;
@@ -79,6 +94,11 @@ public class Case implements Parametres, Serializable {
         }
     }
 
+    /**
+     * Fonction permettant de savoir si la Case à une voisine direct dans la direction rentrée en param
+     * @param direction correspond au "coté" que l'on souhaite verifier
+     * @return true si la case à une case voisine direct dans la direction et false dans le cas contraire
+     */
     public Case getVoisinDirect(int direction) {
         if (direction == HAUT) {
             for (int i = this.y - 1; i >= 0; i--) {

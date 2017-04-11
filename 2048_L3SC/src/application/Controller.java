@@ -36,12 +36,17 @@ public class Controller extends Parent implements Parametres {
 
     private boolean animationFini = false;
 
+    /**
+     * Fonction permettant d'appeler d'autre fonction selon l'action de l'utilisateur
+     * Cette fonction permet de creer la grille puis de faire une nouvelle partie, de sauvegarder la partie, de jouer en multijoueur ou de faire appelle à l'IA selon le bouton cliqué
+     */
     public Controller() {
         Background background = new Background(); // on créé la grille (le background)
         this.getChildren().add(background);
         background.getButtonNew().setOnAction(actionEvent -> newGame());
         background.getButtonSave().setOnAction(actionEvent -> save());
         background.getButtonLoad().setOnAction(actionEvent -> load());
+       //background.getButtonIA().setOnAction(actionEvent -> IA());
         background.getButtonIA().setOnAction(actionEvent -> multijoueur());
 
         // Si la partie à été sauvegardée on la charge
@@ -62,6 +67,10 @@ public class Controller extends Parent implements Parametres {
         //IA();
     }
 
+    /**
+     * Fonction permettant d'afficher les tuiles (cases) sur la grille visible
+     * Pour cela la fonction recupere toutes les cases et leurs coordonnées et les affiches à ces coordonnées
+     */
     public void afficherTuiles() {
         for (Case c : cases) {
             System.out.println(c);
@@ -75,6 +84,10 @@ public class Controller extends Parent implements Parametres {
         }
     }
 
+    /**
+     * methode permettant d'afficher une tuile (case)
+     * @param c correspond à la case que l'on souhaite afficher
+     */
     public void afficherTuile(Case c) {
         Tuile tuile = new Tuile(c.getValeur(), c.getID());
         tuile.convertirPositionCase(c);
@@ -84,6 +97,10 @@ public class Controller extends Parent implements Parametres {
         this.getChildren().add(tuile);
     }
 
+    /**
+     * Fonction permettant de créer une nouvelle partie
+     * Pour cela on créer une nouvelle grille, on vide la liste de cases et l'on ajoute deux nouvelles cases à cette grille
+     */
     public void newGame() {
         grille = new Grille();
         cases = grille.getGrille();
@@ -96,6 +113,9 @@ public class Controller extends Parent implements Parametres {
         afficherTuiles();
     }
 
+    /**
+     * Fonction permettant de faire la sauvegarde d'une partie
+     */
     public void save() {
         // try-with-resources ferme automatiquement les ressources -> pas besoin de .close()
         try  (FileOutputStream fichier = new FileOutputStream("grille.ser");
@@ -109,6 +129,9 @@ public class Controller extends Parent implements Parametres {
         }
     }
 
+    /**
+     * Fonction permettant de charger une partie
+     */
     public void load() {
         try (FileInputStream fichierIn = new FileInputStream("grille.ser");
              ObjectInputStream ois = new ObjectInputStream(fichierIn)) {
@@ -128,7 +151,13 @@ public class Controller extends Parent implements Parametres {
         afficherTuiles();
     }
 
-
+    /**
+     * Fonction permettant de jouer en multijoueur
+     * Pour celà on se connecte au serveur
+     * Puis on configure les entrées
+     * Après celà on recupere les informations que le serveur à renvoyé
+     * Puis ...
+     */
     public void multijoueur() {
         int score = grille.getScore();
         System.out.println("step 1 : on se connecte au serveur");
@@ -168,7 +197,9 @@ public class Controller extends Parent implements Parametres {
         }
     }
 
-
+    /**
+     * Fonction permettant de faire appelle à l'IAc
+     */
     public void IA() {
         while(!grille.partieFinie()) {
             int direction = HAUT;

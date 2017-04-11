@@ -29,6 +29,9 @@ public class Grille implements Parametres, Serializable {
     public Grille(Grille g) { this.grille = g.getGrille(); }
 
     @Override
+    /**
+     * Focntion permettant d'afficher les infromation de la grille
+     */
     public String toString() {
         int[][] tableau = new int[TAILLE][TAILLE];
         for (Case c : this.grille) {
@@ -40,7 +43,11 @@ public class Grille implements Parametres, Serializable {
         }
         return result;
     }
-    
+
+    /**
+     * Fonction permettant de recuperer une chaine HTML
+     * @return les informations de la grille sous forme de HTML
+     */
     public String toHTML() {
         int[][] tableau = new int[TAILLE][TAILLE];
         for (Case c : this.grille) {
@@ -64,6 +71,12 @@ public class Grille implements Parametres, Serializable {
 
     public int getScore() { return  this.score; }
 
+    /**
+     * Fonction permetant de savoir si la partie est finie
+     * On regarde pour celà que le nombre de case de la liste de cases est bien inferieur au nombre de cases disponnible sur la grille
+     * ou bien que l'on puisse plus se deplacer
+     * @return true si la partie est terminer et false dans le cas contraire
+     */
     public boolean partieFinie() {
         if (this.grille.size() < TAILLE * TAILLE) {
             return false;
@@ -81,6 +94,12 @@ public class Grille implements Parametres, Serializable {
         return true;
     }
 
+    /**
+     * Fonction permettant de deplacer les cases de la grille
+     * Cette fonction va pour chaque case la deplacer à l'aide d'une autre fonction (deplacerCasesRecursif)
+     * @param direction direction vers laquelle on veut deplacer les cases
+     * @return true si on a deplacer  au moins une case et false si on a pas pu deplacer une case
+     */
     public boolean lanceurDeplacerCases(int direction) {
         Case[] extremites = this.getCasesExtremites(direction);
         deplacement = false; // pour vérifier si on a bougé au moins une case après le déplacement, avant d'en rajouter une nouvelle
@@ -103,6 +122,10 @@ public class Grille implements Parametres, Serializable {
         return deplacement;
     }
 
+    /**
+     * Fonction permettant de fusionner deux Cases
+     * @param c case que l'on souhaite fusionner
+     */
     private void fusion(Case c) {
         c.setValeur(c.getValeur() * 2);
         score += c.getValeur();
@@ -112,6 +135,13 @@ public class Grille implements Parametres, Serializable {
         deplacement = true;
     }
 
+    /**
+     * Fonction permettant de deplacer une case
+     * @param extremites correspond aux cases des extremites
+     * @param rangee distance
+     * @param direction direction du deplacement
+     * @param compteur
+     */
     private void deplacerCasesRecursif(Case[] extremites, int rangee, int direction, int compteur) {
         if (extremites[rangee] != null) {
             if ((direction == HAUT && extremites[rangee].getY() != compteur)
@@ -187,16 +217,26 @@ public class Grille implements Parametres, Serializable {
         return result;
     }
 
+    /**
+     * Fonction affichant un message de victoire
+     */
     public void victory() {
         System.out.println("Bravo ! Vous avez atteint " + this.valeurMax);
         System.exit(0);
     }
 
+    /**
+     * Fonction affichant un message de defaite
+     */
     public void gameOver() {
         System.out.println("La partie est finie. Votre score est " + this.score);
         System.exit(1);
     }
 
+    /**
+     * Fonction permettant de creer une nouvelle case
+     * @return true si on a pu creer une case et false dans le cas contraire
+     */
     public boolean nouvelleCase() {
         if (this.grille.size() < TAILLE * TAILLE) {
             ArrayList<Case> casesLibres = new ArrayList<>();

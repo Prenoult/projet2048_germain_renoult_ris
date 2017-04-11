@@ -11,6 +11,9 @@ public class Main extends Application {
     Controller controller = new Controller();
 
     @Override
+    /**
+     * Fonction permettant le lancement du jeu 2048
+     */
     public void start(Stage primaryStage) throws Exception {
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("2048"); // titre de la fenêtre

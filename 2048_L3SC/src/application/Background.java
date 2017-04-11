@@ -20,6 +20,9 @@ public class Background extends Parent {
     private Button button_load = new Button("Load");
     private Button button_ia = new Button("IA");
 
+    /**
+     * Fonction permettant de creer le "design" de la grille
+     */
     public Background() {
         // Création d'un carré gris qui sert de fond (taille 600 x 600 avec les bords arrondis)
         Rectangle fond = new Rectangle();

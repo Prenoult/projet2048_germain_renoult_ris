@@ -17,6 +17,13 @@ public class Tuile extends Parent {
     private int valeur;
     private int id;
 
+    /**
+     * Constructeur de la Tuil
+     * Une tuile est la partie graphique/visible de la case
+     * @param v correspond à la valeur de la Tuile
+     * @param id correspond à l'id de la Tuile
+     * Cette fonction permet de creer une nouvelle Tuile, qui aura comme valeur le param v
+     */
     public Tuile(int v, int id) {
         this.id = id;
         this.valeur = v;
@@ -34,6 +41,11 @@ public class Tuile extends Parent {
         this.getChildren().add(p);
     }
 
+    /**
+     * Cette fonction permet d'afficher et de sauvagarder la position de la tuile aux coordonnées rentrées
+     * @param x coordonnée en X
+     * @param y coordonnée en Y
+     */
     public void location(int x, int y) {
         p.setLayoutX(x); // taille de la tuile
         p.setLayoutY(y);
@@ -41,6 +53,10 @@ public class Tuile extends Parent {
         c.setVisible(true);
     }
 
+    /**
+     *Fonction permettant de convertir les positions de la tuile sur la grille (4*4) à la postion de la grille graphique (en pixel)
+     * @param c
+     */
     public void convertirPositionCase(modele.Case c) {
         switch(c.getX()) {
             case 0:
@@ -81,6 +97,10 @@ public class Tuile extends Parent {
         }
     }
 
+    /**
+     * Fonction permettant de modifier la valeur d'une tuile
+     * @param v nouvelle valeur de la tuile
+     */
     public void setValeur(int v) {
         this.valeur = v;
         this.c.setText(Integer.toString(this.valeur));
