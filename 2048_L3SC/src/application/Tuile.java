@@ -18,7 +18,7 @@ public class Tuile extends Parent {
     private int id;
 
     /**
-     * Constructeur de la Tuil
+     * Constructeur de la Tuile
      * Une tuile est la partie graphique/visible de la case
      * @param v correspond à la valeur de la Tuile
      * @param id correspond à l'id de la Tuile

@@ -37,7 +37,8 @@ public class Controller extends Parent implements Parametres {
     private boolean animationFini = false;
 
     /**
-     * Fonction permettant d'appeler d'autre fonction selon l'action de l'utilisateur
+     * Fonction d'initialisation de la grille.
+     * Création du background et de l'interface permettant d'appeler d'autre fonction selon l'action de l'utilisateur
      * Cette fonction permet de creer la grille puis de faire une nouvelle partie, de sauvegarder la partie, de jouer en multijoueur ou de faire appelle à l'IA selon le bouton cliqué
      */
     public Controller() {
@@ -69,7 +70,7 @@ public class Controller extends Parent implements Parametres {
 
     /**
      * Fonction permettant d'afficher les tuiles (cases) sur la grille visible
-     * Pour cela la fonction recupere toutes les cases et leurs coordonnées et les affiches à ces coordonnées
+     * Pour chaques cases du modèle, leur équivalent graphique est créé dans la vue (leurs coordonnées sont converties grâce à convertirPositionCase())
      */
     public void afficherTuiles() {
         for (Case c : cases) {
@@ -85,7 +86,7 @@ public class Controller extends Parent implements Parametres {
     }
 
     /**
-     * methode permettant d'afficher une tuile (case)
+     * Méthode permettant d'afficher une tuile (case)
      * @param c correspond à la case que l'on souhaite afficher
      */
     public void afficherTuile(Case c) {
@@ -198,7 +199,7 @@ public class Controller extends Parent implements Parametres {
     }
 
     /**
-     * Fonction permettant de faire appelle à l'IAc
+     * Fonction permettant de faire appelle à l'IA
      */
     public void IA() {
         while(!grille.partieFinie()) {
