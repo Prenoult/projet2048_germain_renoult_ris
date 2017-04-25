@@ -49,7 +49,10 @@ public class Controller extends Parent implements Parametres {
         background.getButtonNew().setOnAction(actionEvent -> newGame());
         background.getButtonSave().setOnAction(actionEvent -> save());
         background.getButtonLoad().setOnAction(actionEvent -> load());
-        background.getButtonIA().setOnAction(actionEvent -> ia.lancerIA());
+        background.getButtonIA().setOnAction(actionEvent -> this.ia.lancerIA());
+        background.getButtonInt().setOnAction(actionEvent -> this.ia.lancerIA2());
+
+
         //background.getButtonIA().setOnAction(actionEvent -> multijoueur());
 
         // Si la partie à été sauvegardée on la charge
@@ -114,6 +117,7 @@ public class Controller extends Parent implements Parametres {
         }
         tuiles.removeAll(tuiles);
         afficherTuiles();
+        this.ia=new IA(this);
     }
 
     /**

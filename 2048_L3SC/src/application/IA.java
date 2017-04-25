@@ -26,180 +26,170 @@ public class IA  implements Parametres {
         this.cases = controller.getCases();
     }
 
-    public void lancerIA(/*Case caseMax, Grille grille, HashSet<Case> cases, HashSet<Tuile> tuiles*/) {
+    public void lancerIA2(){
         Case c1 = caseMax;
         Case c2 = null;
         int i = 0;
         // on récuperre les deux cases
-        for (Case c : cases) {
-            if (i == 0) {
-                c1 = c;
-            } else {
-                c2 = c;
+        if(cases.size()<2) {
+
+
+            boolean b1 = initIa(0, c1, c2);
+            System.out.println(grille);
+            if (b1) {
+                grille.nouvelleCase();
+                for (Tuile tuile : tuiles) {
+                    tuile.setVisible(false);
+                }
+                tuiles.removeAll(tuiles);
+                controller.afficherTuiles();
+
+                if (!b1) grille.gameOver();
+                if (grille.getValeurMax() >= OBJECTIF) grille.victory();
+                // try{
+                //   Thread.sleep(5000);
+                //}catch(InterruptedException e){}
             }
-            i++;
-        }
+            System.out.println("     ");
+            System.out.println("     ");
+            System.out.println(grille);
+            boolean b2 = initIa(1, c1, c2);
 
-        // on met la classe avec la plus grande valeur en c1
-        if (c1.getValeur() < c2.getValeur()) {
-            Case tmp = c2;
-            c2 = c1;
-            c1 = tmp;
-        }
 
-        boolean b1 = initIa(0, c1, c2);
-        System.out.println(grille);
-        if (b1) {
-            grille.nouvelleCase();
-            for (Tuile tuile : tuiles) {
-                tuile.setVisible(false);
+            if (b2) {
+                grille.nouvelleCase();
+                for (Tuile tuile : tuiles) {
+                    tuile.setVisible(false);
+                }
+                tuiles.removeAll(tuiles);
+                controller.afficherTuiles();
+
+                if (b2 == false) grille.gameOver();
             }
-            tuiles.removeAll(tuiles);
-            controller.afficherTuiles();
-
-            if (!b1) grille.gameOver();
+            System.out.println("     ");
+            System.out.println("     ");
+            System.out.println(grille);
             if (grille.getValeurMax() >= OBJECTIF) grille.victory();
-            // try{
-            //   Thread.sleep(5000);
-            //}catch(InterruptedException e){}
-        }
-        System.out.println("     ");
-        System.out.println("     ");
-        System.out.println(grille);
-        boolean b2 = initIa(1, c1, c2);
+            boolean loop = true;
+            for (Case c : cases) {
+                if (c != c1 && c.getValeur() > c1.getValeur()) {
+                    if ((c.getY() == 0 && c.getX() == 0) || (c.getY() == 0 && c.getX() == 3) || (c.getY() == 3 && c.getX() == 0) || (c.getY() == 3 && c.getX() == 3)) {
+                        c1 = c;
+                    }
 
+                    if (c.getX() == 0) {
+                        if (c1.getVoisinDirect(HAUT) == null) {
+                            boolean b = grille.lanceurDeplacerCases(HAUT);
+                            c1 = c;
+                            if (b) {
+                                grille.nouvelleCase();
+                                for (Tuile tuile : tuiles) {
+                                    tuile.setVisible(false);
+                                }
+                                tuiles.removeAll(tuiles);
+                                controller.afficherTuiles();
+                            }
+                        }
+                        if (c1.getVoisinDirect(BAS) == null) {
+                            boolean b = grille.lanceurDeplacerCases(BAS);
+                            c1 = c;
+                            if (b) {
+                                grille.nouvelleCase();
+                                for (Tuile tuile : tuiles) {
+                                    tuile.setVisible(false);
+                                }
+                                tuiles.removeAll(tuiles);
+                                controller.afficherTuiles();
+                            }
+                        }
+                    }
 
-        if (b2) {
-            grille.nouvelleCase();
-            for (Tuile tuile : tuiles) {
-                tuile.setVisible(false);
+                    if (c.getX() == 3) {
+                        if (c1.getVoisinDirect(HAUT) == null) {
+                            boolean b = grille.lanceurDeplacerCases(HAUT);
+                            c1 = c;
+                            if (b) {
+                                grille.nouvelleCase();
+                                for (Tuile tuile : tuiles) {
+                                    tuile.setVisible(false);
+                                }
+                                tuiles.removeAll(tuiles);
+                                controller.afficherTuiles();
+                            }
+                        }
+                        if (c1.getVoisinDirect(BAS) == null) {
+                            boolean b = grille.lanceurDeplacerCases(BAS);
+                            c1 = c;
+                            if (b) {
+                                grille.nouvelleCase();
+                                for (Tuile tuile : tuiles) {
+                                    tuile.setVisible(false);
+                                }
+                                tuiles.removeAll(tuiles);
+                                controller.afficherTuiles();
+                            }
+                        }
+                    }
+
+                    if (c.getY() == 0) {
+                        if (c1.getVoisinDirect(DROITE) == null) {
+                            boolean b = grille.lanceurDeplacerCases(DROITE);
+                            c1 = c;
+                            if (b) {
+                                grille.nouvelleCase();
+                                for (Tuile tuile : tuiles) {
+                                    tuile.setVisible(false);
+                                }
+                                tuiles.removeAll(tuiles);
+                                controller.afficherTuiles();
+                            }
+                        }
+                        if (c1.getVoisinDirect(GAUCHE) == null) {
+                            boolean b = grille.lanceurDeplacerCases(GAUCHE);
+                            c1 = c;
+                            if (b) {
+                                grille.nouvelleCase();
+                                for (Tuile tuile : tuiles) {
+                                    tuile.setVisible(false);
+                                }
+                                tuiles.removeAll(tuiles);
+                                controller.afficherTuiles();
+                            }
+                        }
+                    }
+
+                    if (c.getY() == 3) {
+                        if (c1.getVoisinDirect(DROITE) == null) {
+                            boolean b = grille.lanceurDeplacerCases(DROITE);
+                            c1 = c;
+                            if (b) {
+                                grille.nouvelleCase();
+                                for (Tuile tuile : tuiles) {
+                                    tuile.setVisible(false);
+                                }
+                                tuiles.removeAll(tuiles);
+                                controller.afficherTuiles();
+                            }
+                        }
+                        if (c1.getVoisinDirect(GAUCHE) == null) {
+                            boolean b = grille.lanceurDeplacerCases(GAUCHE);
+                            c1 = c;
+                            if (b) {
+                                grille.nouvelleCase();
+                                for (Tuile tuile : tuiles) {
+                                    tuile.setVisible(false);
+                                }
+                                tuiles.removeAll(tuiles);
+                                controller.afficherTuiles();
+                            }
+                        }
+                    }
+                    //
+                }
             }
-            tuiles.removeAll(tuiles);
-            controller.afficherTuiles();
-
-            if (b2 == false) grille.gameOver();
         }
-        System.out.println("     ");
-        System.out.println("     ");
-        System.out.println(grille);
-        if (grille.getValeurMax() >= OBJECTIF) grille.victory();
         boolean loop = true;
-        for (Case c : cases) {
-            if (c != c1 && c.getValeur() > c1.getValeur()) {
-                if ((c.getY() == 0 && c.getX() == 0)|| (c.getY() == 0 && c.getX() == 3) || (c.getY() == 3 && c.getX() == 0) || (c.getY() == 3 && c.getX() == 3) ) {
-                    c1 = c;
-                }
 
-                if(c.getX()==0){
-                    if (c1.getVoisinDirect(HAUT) == null) {
-                        boolean b = grille.lanceurDeplacerCases(HAUT);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            controller.afficherTuiles();
-                        }
-                    }
-                    if (c1.getVoisinDirect(BAS) == null) {
-                        boolean b = grille.lanceurDeplacerCases(BAS);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            controller.afficherTuiles();
-                        }
-                    }
-                }
-
-                if(c.getX()==3){
-                    if (c1.getVoisinDirect(HAUT) == null) {
-                        boolean b = grille.lanceurDeplacerCases(HAUT);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            controller.afficherTuiles();
-                        }
-                    }
-                    if (c1.getVoisinDirect(BAS) == null) {
-                        boolean b = grille.lanceurDeplacerCases(BAS);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            controller.afficherTuiles();
-                        }
-                    }
-                }
-
-                if(c.getY()==0){
-                    if (c1.getVoisinDirect(DROITE) == null) {
-                        boolean b = grille.lanceurDeplacerCases(DROITE);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            controller.afficherTuiles();
-                        }
-                    }
-                    if (c1.getVoisinDirect(GAUCHE) == null) {
-                        boolean b = grille.lanceurDeplacerCases(GAUCHE);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            controller.afficherTuiles();
-                        }
-                    }
-                }
-
-                if(c.getY()==3){
-                    if (c1.getVoisinDirect(DROITE) == null) {
-                        boolean b = grille.lanceurDeplacerCases(DROITE);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            controller.afficherTuiles();
-                        }
-                    }
-                    if (c1.getVoisinDirect(GAUCHE) == null) {
-                        boolean b = grille.lanceurDeplacerCases(GAUCHE);
-                        c1=c;
-                        if (b) {
-                            grille.nouvelleCase();
-                            for (Tuile tuile : tuiles) {
-                                tuile.setVisible(false);
-                            }
-                            tuiles.removeAll(tuiles);
-                            controller.afficherTuiles();
-                        }
-                    }
-                }
-                //
-            }
-        }
         //while (!grille.partieFinie() && loop) {
             loop = deplacerIa(c1);
             if (loop) {
@@ -217,11 +207,208 @@ public class IA  implements Parametres {
             System.out.println(" ");
             if (grille.getValeurMax() >= OBJECTIF) grille.victory();
         //}
+    }
+
+    public void lancerIA(/*Case caseMax, Grille grille, HashSet<Case> cases, HashSet<Tuile> tuiles*/) {
+        Case c1 = caseMax;
+        Case c2 = null;
+        int i = 0;
+        // on récuperre les deux cases
+       if(cases.size()<2) {
+           for (Case c : cases) {
+               if (i == 0) {
+                   c1 = c;
+               } else {
+                   c2 = c;
+               }
+               i++;
+           }
+
+           // on met la classe avec la plus grande valeur en c1
+           if (c1.getValeur() < c2.getValeur()) {
+               Case tmp = c2;
+               c2 = c1;
+               c1 = tmp;
+           }
+
+           boolean b1 = initIa(0, c1, c2);
+           System.out.println(grille);
+           if (b1) {
+               grille.nouvelleCase();
+               for (Tuile tuile : tuiles) {
+                   tuile.setVisible(false);
+               }
+               tuiles.removeAll(tuiles);
+               controller.afficherTuiles();
+
+               if (!b1) grille.gameOver();
+               if (grille.getValeurMax() >= OBJECTIF) grille.victory();
+               // try{
+               //   Thread.sleep(5000);
+               //}catch(InterruptedException e){}
+           }
+           System.out.println("     ");
+           System.out.println("     ");
+           System.out.println(grille);
+           boolean b2 = initIa(1, c1, c2);
+
+
+           if (b2) {
+               grille.nouvelleCase();
+               for (Tuile tuile : tuiles) {
+                   tuile.setVisible(false);
+               }
+               tuiles.removeAll(tuiles);
+               controller.afficherTuiles();
+
+               if (b2 == false) grille.gameOver();
+           }
+           System.out.println("     ");
+           System.out.println("     ");
+           System.out.println(grille);
+           if (grille.getValeurMax() >= OBJECTIF) grille.victory();
+           boolean loop = true;
+           for (Case c : cases) {
+               if (c != c1 && c.getValeur() > c1.getValeur()) {
+                   if ((c.getY() == 0 && c.getX() == 0) || (c.getY() == 0 && c.getX() == 3) || (c.getY() == 3 && c.getX() == 0) || (c.getY() == 3 && c.getX() == 3)) {
+                       c1 = c;
+                   }
+
+                   if (c.getX() == 0) {
+                       if (c1.getVoisinDirect(HAUT) == null) {
+                           boolean b = grille.lanceurDeplacerCases(HAUT);
+                           c1 = c;
+                           if (b) {
+                               grille.nouvelleCase();
+                               for (Tuile tuile : tuiles) {
+                                   tuile.setVisible(false);
+                               }
+                               tuiles.removeAll(tuiles);
+                               controller.afficherTuiles();
+                           }
+                       }
+                       if (c1.getVoisinDirect(BAS) == null) {
+                           boolean b = grille.lanceurDeplacerCases(BAS);
+                           c1 = c;
+                           if (b) {
+                               grille.nouvelleCase();
+                               for (Tuile tuile : tuiles) {
+                                   tuile.setVisible(false);
+                               }
+                               tuiles.removeAll(tuiles);
+                               controller.afficherTuiles();
+                           }
+                       }
+                   }
+
+                   if (c.getX() == 3) {
+                       if (c1.getVoisinDirect(HAUT) == null) {
+                           boolean b = grille.lanceurDeplacerCases(HAUT);
+                           c1 = c;
+                           if (b) {
+                               grille.nouvelleCase();
+                               for (Tuile tuile : tuiles) {
+                                   tuile.setVisible(false);
+                               }
+                               tuiles.removeAll(tuiles);
+                               controller.afficherTuiles();
+                           }
+                       }
+                       if (c1.getVoisinDirect(BAS) == null) {
+                           boolean b = grille.lanceurDeplacerCases(BAS);
+                           c1 = c;
+                           if (b) {
+                               grille.nouvelleCase();
+                               for (Tuile tuile : tuiles) {
+                                   tuile.setVisible(false);
+                               }
+                               tuiles.removeAll(tuiles);
+                               controller.afficherTuiles();
+                           }
+                       }
+                   }
+
+                   if (c.getY() == 0) {
+                       if (c1.getVoisinDirect(DROITE) == null) {
+                           boolean b = grille.lanceurDeplacerCases(DROITE);
+                           c1 = c;
+                           if (b) {
+                               grille.nouvelleCase();
+                               for (Tuile tuile : tuiles) {
+                                   tuile.setVisible(false);
+                               }
+                               tuiles.removeAll(tuiles);
+                               controller.afficherTuiles();
+                           }
+                       }
+                       if (c1.getVoisinDirect(GAUCHE) == null) {
+                           boolean b = grille.lanceurDeplacerCases(GAUCHE);
+                           c1 = c;
+                           if (b) {
+                               grille.nouvelleCase();
+                               for (Tuile tuile : tuiles) {
+                                   tuile.setVisible(false);
+                               }
+                               tuiles.removeAll(tuiles);
+                               controller.afficherTuiles();
+                           }
+                       }
+                   }
+
+                   if (c.getY() == 3) {
+                       if (c1.getVoisinDirect(DROITE) == null) {
+                           boolean b = grille.lanceurDeplacerCases(DROITE);
+                           c1 = c;
+                           if (b) {
+                               grille.nouvelleCase();
+                               for (Tuile tuile : tuiles) {
+                                   tuile.setVisible(false);
+                               }
+                               tuiles.removeAll(tuiles);
+                               controller.afficherTuiles();
+                           }
+                       }
+                       if (c1.getVoisinDirect(GAUCHE) == null) {
+                           boolean b = grille.lanceurDeplacerCases(GAUCHE);
+                           c1 = c;
+                           if (b) {
+                               grille.nouvelleCase();
+                               for (Tuile tuile : tuiles) {
+                                   tuile.setVisible(false);
+                               }
+                               tuiles.removeAll(tuiles);
+                               controller.afficherTuiles();
+                           }
+                       }
+                   }
+                   //
+               }
+           }
+       }
+           boolean loop = true;
+
+        while (!grille.partieFinie() && loop) {
+            loop = deplacerIa(c1);
+            if (loop) {
+                grille.nouvelleCase();
+                for (Tuile tuile : tuiles) {
+                    tuile.setVisible(false);
+                }
+                tuiles.removeAll(tuiles);
+                controller.afficherTuiles();
+
+                if (!loop) grille.gameOver();
+            }
+            System.out.println("     ");
+            System.out.println(grille);
+            System.out.println(" ");
+            if (grille.getValeurMax() >= OBJECTIF) grille.victory();
+        }
         //System.out.println("       " + c1 + loop);
 
     }
 
-    private Boolean deplacerIa(Case c1) {
+    public Boolean deplacerIa(Case c1) {
         //System.out.println(c1);
         Case tmp;
         int direction = 0;
