@@ -15,18 +15,32 @@ import java.util.Random;
  *
  * @author Sylvain
  */
-public class Grille implements Parametres, Serializable {
+public class Grille implements Parametres, Serializable, Cloneable {
 
-    private final HashSet<Case> grille;
+    private HashSet<Case> grille;
     private int valeurMax = 0;
     private boolean deplacement;
     private int caseId = 0;
     private int score = 0;
 
+    private boolean playerTurn = true;
+
     public Grille() {
         this.grille = new HashSet<>();
     }
     public Grille(Grille g) { this.grille = g.getGrille(); }
+
+    public Object clone() throws CloneNotSupportedException {
+        Grille copy = (Grille)new Grille();
+        copy.playerTurn = this.playerTurn;
+        for(Case c : this.grille) {
+            copy.getGrille().add(new Case(c.getX(), c.getY(), c.getValeur(), c.getID()));
+        }
+        //copy.grille = (HashSet)grille.clone();
+        copy.valeurMax = valeurMax;
+
+        return copy;
+    }
 
     @Override
     /**
@@ -60,6 +74,7 @@ public class Grille implements Parametres, Serializable {
         result += "</html>";
         return result;
     }
+
 
     public HashSet<Case> getGrille() {
         return grille;
@@ -230,7 +245,7 @@ public class Grille implements Parametres, Serializable {
      */
     public void gameOver() {
         System.out.println("La partie est finie. Votre score est " + this.score);
-        System.exit(1);
+        //System.exit(1);
     }
 
     /**

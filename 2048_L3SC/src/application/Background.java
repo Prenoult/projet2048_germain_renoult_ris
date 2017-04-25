@@ -19,6 +19,7 @@ public class Background extends Parent {
     private Button button_save = new Button("Save");
     private Button button_load = new Button("Load");
     private Button button_ia = new Button("IA");
+    private Button button_int = new Button("Help");
 
     /**
      * Fonction permettant de creer le "design" de la grille
@@ -72,6 +73,8 @@ public class Background extends Parent {
         button_load.setTranslateY(30);
         button_ia.setTranslateX(603);
         button_ia.setTranslateY(120);
+        button_int.setTranslateX(681.5);
+        button_int.setTranslateY(120);
         button_new.getStyleClass().add("button");
         button_new.getStyleClass().add("big_button");
         button_save.getStyleClass().add("button");
@@ -79,7 +82,9 @@ public class Background extends Parent {
         button_load.getStyleClass().add("button");
         button_load.getStyleClass().add("little_button");
         button_ia.getStyleClass().add("button");
-        button_ia.getStyleClass().add("big_button");
+        button_ia.getStyleClass().add("little_button");
+        button_int.getStyleClass().add("button");
+        button_int.getStyleClass().add("little_button");
 
 
         // Positionnement de la grille au centre de la fenêtre
@@ -96,6 +101,7 @@ public class Background extends Parent {
         this.getChildren().add(button_save);
         this.getChildren().add(button_load);
         this.getChildren().add(button_ia);
+        this.getChildren().add(button_int);
         this.setFocusTraversable(true);
     }
 
@@ -104,6 +110,8 @@ public class Background extends Parent {
     public Button getButtonSave() { return this.button_save; }
     public Button getButtonLoad() { return this.button_load; }
     public Button getButtonIA() { return this.button_ia; }
+    public Button getButtonInt() { return this.button_int; }
+
 
 
 }

@@ -36,6 +36,8 @@ public class Controller extends Parent implements Parametres {
 
     private boolean animationFini = false;
 
+    private IA ia;
+
     /**
      * Fonction d'initialisation de la grille.
      * Création du background et de l'interface permettant d'appeler d'autre fonction selon l'action de l'utilisateur
@@ -47,8 +49,8 @@ public class Controller extends Parent implements Parametres {
         background.getButtonNew().setOnAction(actionEvent -> newGame());
         background.getButtonSave().setOnAction(actionEvent -> save());
         background.getButtonLoad().setOnAction(actionEvent -> load());
-       //background.getButtonIA().setOnAction(actionEvent -> IA());
-        background.getButtonIA().setOnAction(actionEvent -> multijoueur());
+        background.getButtonIA().setOnAction(actionEvent -> ia.lancerIA());
+        //background.getButtonIA().setOnAction(actionEvent -> multijoueur());
 
         // Si la partie à été sauvegardée on la charge
         File fichierSauvegarde = new File("grille.ser");
@@ -249,6 +251,25 @@ public class Controller extends Parent implements Parametres {
         }
         grille.gameOver();
     }
+
+    /**
+     * Retourne la case qui possède la valeur la plus haute
+     */
+    public Case getCaseMax() {
+        Case caseMax = new Case(0,0,0,0);
+        for(Case c : cases) {
+            if(c.getValeur() > caseMax.getValeur()) {
+                caseMax = c;
+            }
+        }
+        return caseMax;
+    }
+
+    public Grille getGrille() { return this.grille; }
+    public HashSet<Tuile> getTuiles() { return this.tuiles; }
+    public HashSet<Case> getCases() { return this.cases; }
+
+    public void getIA(IA ia) { this.ia = ia; }
 
 
     private class GenericHandler implements EventHandler<Event> {

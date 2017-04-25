@@ -22,6 +22,7 @@ public class Main extends Application {
         boolean add = scene.getStylesheets().add("css/style.css"); // ajout du fichier css
 
         root.getChildren().add(controller);
+        controller.getIA(new IA(controller));
 
         // Réseaux
         Serveur serveur = new Serveur();
